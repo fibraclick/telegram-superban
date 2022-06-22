@@ -17,7 +17,7 @@ if not api_hash or not api_id:
 app = Client(api_hash=api_hash, api_id=int(api_id), name='userbot')
 
 
-@app.on_message(filters=filters.group & filters.command('superban', '/.'))
+@app.on_message(filters=filters.group & filters.command('superban'))
 async def ban_via_reaction(client: Client, message: Message):
     user = await client.get_chat_member(message.chat.id, message.from_user.id)
     if user.status not in [ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR]:
