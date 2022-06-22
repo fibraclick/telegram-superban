@@ -9,4 +9,4 @@ COPY . .
 
 RUN pipenv install
 
-ENTRYPOINT ["python3", "/app/main.py"]
+ENTRYPOINT ["pipenv", "run", "python", "/app/main.py"]
