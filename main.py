@@ -6,7 +6,7 @@ from pyrogram.enums import ChatMemberStatus
 from pyrogram.raw import functions
 from pyrogram.types import Message
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 
 api_hash = os.getenv('API_HASH')
 api_id = os.getenv('API_ID')
