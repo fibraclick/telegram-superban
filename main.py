@@ -1,7 +1,7 @@
 import logging
 import os
 
-from pyrogram import Client, filters
+from pyrogram import Client, filters, enums
 from pyrogram.enums import ChatMemberStatus
 from pyrogram.raw import functions
 from pyrogram.types import Message
@@ -19,8 +19,11 @@ app = Client(api_hash=api_hash, api_id=int(api_id), name='userbot')
 
 @app.on_message(filters=filters.group & filters.command('superban'))
 async def ban_via_reaction(client: Client, message: Message):
+    logging.info(f'Received superban from {message.from_user.id}')
+
     user = await client.get_chat_member(message.chat.id, message.from_user.id)
     if user.status not in [ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR]:
+        logging.warning('User is not owner/admin')
         return
 
     await message.delete()
@@ -32,19 +35,22 @@ async def ban_via_reaction(client: Client, message: Message):
     ))
 
     if len(r.reactions) > 1:
-        await message.reply_text('❌ È presente più di una reazione.')
+        await message.reply_text('❌ È presente più di una reazione')
         return
 
     user_id = r.reactions[0].peer_id.user_id
+
+    logging.info(f'Banning {user_id}')
 
     try:
         await client.ban_chat_member(message.chat.id, user_id)
     except:
         logging.exception('Could not ban user')
-        await message.reply_text('❌ Non sono riuscito a bannare l\'utente')
+        await message.reply_text(f'❌ Non sono riuscito a bannare l\'utente `{user_id}`',
+                                 parse_mode=enums.ParseMode.MARKDOWN)
         return
 
-    await message.reply_text(f'✅ Utente {user_id} bannato.')
+    await message.reply_text(f'✅ Utente `{user_id}` bannato', parse_mode=enums.ParseMode.MARKDOWN)
 
 
 app.run()
