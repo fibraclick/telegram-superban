@@ -35,6 +35,9 @@ async def ban_via_reaction(client: Client, message: Message):
     ))
 
     if message.command == 'superban':
+        if len(r.reactions) == 0:
+            await message.reply_text('🤔 Non ci sono reazioni')
+            return
         if len(r.reactions) > 1:
             await message.reply_text('❌ È presente più di una reazione')
             return
