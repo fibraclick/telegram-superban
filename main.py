@@ -17,7 +17,7 @@ if not api_hash or not api_id:
 app = Client(api_hash=api_hash, api_id=int(api_id), name='userbot')
 
 
-@app.on_message(filters=filters.group & filters.command('superban'))
+@app.on_message(filters=filters.group & filters.command(['superban', 'megaban']))
 async def ban_via_reaction(client: Client, message: Message):
     logging.info(f'Received superban from {message.from_user.id}')
 
@@ -34,12 +34,19 @@ async def ban_via_reaction(client: Client, message: Message):
         limit=10,
     ))
 
-    if len(r.reactions) > 1:
-        await message.reply_text('❌ È presente più di una reazione')
-        return
+    if message.command == 'superban':
+        if len(r.reactions) > 1:
+            await message.reply_text('❌ È presente più di una reazione')
+            return
+        user_id = r.reactions[0].peer_id.user_id
+        await ban(client, message, user_id)
+    elif message.command == 'megaban':
+        for r in r.reactions:
+            user_id = r.peer_id.user_id
+            await ban(client, message, user_id)
 
-    user_id = r.reactions[0].peer_id.user_id
 
+async def ban(client: Client, message: Message, user_id: int):
     logging.info(f'Banning {user_id}')
 
     try:
