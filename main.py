@@ -34,7 +34,7 @@ async def ban_via_reaction(client: Client, message: Message):
         limit=10,
     ))
 
-    if message.command == 'superban':
+    if 'superban' in message.command:
         if len(r.reactions) == 0:
             await message.reply_text('🤔 Non ci sono reazioni')
             return
@@ -43,7 +43,7 @@ async def ban_via_reaction(client: Client, message: Message):
             return
         user_id = r.reactions[0].peer_id.user_id
         await ban(client, message, user_id)
-    elif message.command == 'megaban':
+    elif 'megaban' in message.command:
         for r in r.reactions:
             user_id = r.peer_id.user_id
             await ban(client, message, user_id)
